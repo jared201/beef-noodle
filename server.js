@@ -15,8 +15,15 @@ app.use(express.static(path.join(__dirname, 'build')));
 app.use(cors());
 // initialize body-parser
 app.use(bodyParser.json());
-//listen to port
+// add your endpoints here
 app.get('/hello', function (req, res) {
     res.status(200).send('Hello World!');
 })
+    .get('/get-key', function (req, res) {
+        const keygenerator = require('./modules/keygenerator');
+        const key = keygenerator.generateKey();
+        res.status(200).send(key);
+    })
+//listen to port
+
 app.listen(port, () => console.log(`Server listening on port ${port}!`));
