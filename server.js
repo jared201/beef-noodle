@@ -5,7 +5,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const port = 3001 || process.env.PORT;
+const port = process.env.PORT || 3001;
 const path = require('path');
 // initialize express
 app.use(express.static('public'));
