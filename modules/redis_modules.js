@@ -16,12 +16,15 @@ exports.setValuesWithHash = function (hash, key, value) {
 }
 
 //redis client
-function setupRedisClient() {
+exports.setupRedisClient = function()  {
     const redis = require('redis');
+    const password = process.env.REDIS_PASSWORD;
     const client = redis.createClient({
-        host: 'redis-17269.c1.ap-southeast-1-1.ec2.cloud.redislabs.com',
-        port: 6379,
-        database: "beef-noodle",
-    });
+        password: password,
+        socket: {
+            host: process.env.REDIS_HOST,
+            port: process.env.REDIS_PORT,
+            }
+       });
     return client;
 }

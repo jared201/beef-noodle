@@ -24,6 +24,17 @@ app.get('/hello', function (req, res) {
         const key = keygenerator.generateKey();
         res.status(200).send(key);
     })
+    .get('/test-subscription', function (req, res) {
+        const subscription = require('./modules/subscription_module');
+        const body = {
+            payer_email: 'jared.odulio@gmail.com',
+            item_name: 'test',
+            txn_type: 'subscr_signup',
+        }
+        subscription.saveSubscription(body, function (api_key) {
+                res.status(200).send(api_key);
+        });
+    })
 //listen to port
 
 app.listen(port, () => console.log(`Server listening on port ${port}!`));
