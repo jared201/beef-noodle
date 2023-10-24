@@ -22,8 +22,8 @@ exports.setupRedisClient = function()  {
     const client = redis.createClient({
         password: password,
         socket: {
-            host: 'redis-11503.c252.ap-southeast-1-1.ec2.cloud.redislabs.com',
-            port: 11503
+            host: process.env.REDIS_HOST,
+            port: process.env.REDIS_PORT,
             }
        });
     return client;

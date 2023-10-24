@@ -24,38 +24,53 @@ exports.saveSubscription = function(body, callback) {
     let payer_email = body.payer_email;
     let item_name = body.item_name;
     let api_key = keygenerator.generateKey();
+    //add expiration date for api key one year from now
+    let date = new Date();
+    date = date.setFullYear(date.getFullYear() + 1);
+    date = new Date (date);
+    let TTL = date.getTime();
+    let strDate = date.toDateString();
+
     // create json object and save it using redis json
     let json = {
         "payer_email": payer_email,
         "item_name": item_name,
-        "api_key": api_key
+        "api_key": api_key,
+        "expiration_date": TTL,
     }
     //save subscription details in redis cache with hash
-    client.connect({
-        host: 'redis-11503.c252.ap-southeast-1-1.ec2.cloud.redislabs.com',
-        port: 11503,
-        password: process.env.REDIS_PASSWORD
-    })
+    client.connect()
     .then(function() {
         // save subscription details in redis cache with hash
-        client.hSet('subs-' + payer_email, 'payer_email', payer_email, function(err, result) {
-        if (err) {
-                console.log(err);
-            }
-            console.log(result);
-        })
-        client.hSet('subs-' + payer_email, 'item_name', item_name, function(err, result) {
+        client.json.set('subs-'+ payer_email, '.', JSON.stringify(json), function(err, result) {
             if (err) {
                 console.log(err);
             }
             console.log(result);
-        })
-        client.hSet('subs-' + payer_email, 'api-key', api_key, function(err, result) {
+        });
+        client.ttl('subs-' + payer_email, TTL, function(err, result) {
             if (err) {
                 console.log(err);
             }
             console.log(result);
-        })
-    })
-    callback(api_key);
+        });
+        client.lPush('subscriptions', 'subs-' + payer_email, function(err, result) {
+            if (err) {
+                console.log(err);
+            }
+            console.log(result);
+        });
+    }).then(
+        function() {
+            try
+            {
+
+                client.quit();
+                callback(api_key);
+            } catch (err) {
+                console.log(err);
+            };
+        }
+    )
+
 }
