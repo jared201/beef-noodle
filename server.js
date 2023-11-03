@@ -34,7 +34,12 @@ app.get('/hello', function (req, res) {
         subscription.saveSubscription(body, function (api_key) {
                 res.status(200).send(api_key);
         });
-    })
+    }).post('/paypal-webhook', function (req, res) {
+        const subscription = require('./modules/subscription_module');
+        subscription.handleSubscription(req.body, function (result) {
+            res.status(200).send('');
+        });
+    });
 //listen to port
 
 app.listen(port, () => console.log(`Server listening on port ${port}!`));
