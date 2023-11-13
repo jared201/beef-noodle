@@ -1,13 +1,52 @@
 /**
  * Module for handling subscription events
  */
-
+const request = require('request')
 // Activation paypal webhook
 exports.handleSubscription = function(body, callback) {
     let payer_email = body.payer_email;
     let item_name = body.item_name;
     //callback immediately with 200 status
     callback('');
+    let verify_body = 'cmd=_notify-validate&' + body;
+    console.log('Verifying with paypal');
+    console.log(verify_body);
+    let uri = process.env.PAYPAL_WEBSCR || 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr';
+
+    let options = {
+        method: 'POST',
+        uri: uri,
+        headers: {
+            'Connection': 'close'
+        },
+        body: verify_body,
+        strictSSL : true,
+        rejectUnauthorized : false,
+        requestCert : true,
+        agent: false
+    }
+
+    request(options, function(err, res, body) {
+        if (err) {
+            console.log(err);
+        }
+        console.log('Paypal response');
+        console.log(body);
+        if (body === 'VERIFIED') {
+            console.log('Verified');
+            handleTransaction(body, function(api_key) {
+                console.log(api_key);
+            });
+        } else if (body === 'INVALID') {
+            console.log('Invalid');
+        } else {
+
+        }
+    });
+
+}
+
+function handleTransaction(body, callback) {
     //check txn_type
     if (body.txn_type === 'subscr_signup') {
         console.log('subscr_signup');
@@ -26,7 +65,6 @@ exports.handleSubscription = function(body, callback) {
         });
     }
 }
-
 // cancel subscription
 function cancelSubscription(body, callback) {
     // cancel subscription
