@@ -8,9 +8,9 @@ exports.handleSubscription = function(body, callback) {
     let item_name = body.item_name;
     //callback immediately with 200 status
     callback('');
-    let response_body = JSON.stringify(body);
+
     console.log('Paypal response body');
-    console.log(response_body);
+    console.log(body);
     let verify_body = 'cmd=_notify-validate&' + body;
     console.log('Verifying with paypal');
     console.log(verify_body);
