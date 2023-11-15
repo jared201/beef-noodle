@@ -36,7 +36,15 @@ app.get('/hello', function (req, res) {
         });
     }).post('/paypal-webhook', function (req, res) {
         const subscription = require('./modules/subscription_module');
-        subscription.handleSubscription(res, function (result) {
+        let transmissionId = req.query.transmissionId;
+        let timestamp = req.query.timestamp;
+        let webhookId = req.query.webhookId;
+        let body = req.body;
+        if (typeof body === 'string') {
+            body = JSON.parse(body);
+        }
+        console.table(body);
+        subscription.handleSubscription(body, function (result) {
             res.status(200).send('');
         });
     });
