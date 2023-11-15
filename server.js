@@ -48,6 +48,9 @@ app.get('/hello', function (req, res) {
         let body = req.query.body;
         if (typeof body === 'string') {
             body = JSON.parse(body);
+        } // else convert object to string
+         if (typeof body === 'object') {
+            body = JSON.stringify(body);
         }
         console.table(body);
         subscription.handleSubscription(body, function (result) {
