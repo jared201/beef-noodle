@@ -14,7 +14,7 @@ app.use(express.static(path.join(__dirname, 'build')));
 // initialize cors
 app.use(cors());
 // initialize body-parser
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // add your endpoints here
 app.get('/hello', function (req, res) {
