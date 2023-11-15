@@ -15,6 +15,7 @@ app.use(express.static(path.join(__dirname, 'build')));
 app.use(cors());
 // initialize body-parser
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 // add your endpoints here
 app.get('/hello', function (req, res) {
     res.status(200).send('Hello World!');
@@ -39,9 +40,17 @@ app.get('/hello', function (req, res) {
         let transmissionId = req.query.transmissionId;
         let timestamp = req.query.timestamp;
         let webhookId = req.query.webhookId;
+        let crc32 = req.query.crc32;
+        console.log(transmissionId);
+        console.log(timestamp);
+        console.log(webhookId);
+        console.log(crc32);
         let body = req.body;
         if (typeof body === 'string') {
             body = JSON.parse(body);
+        } // else convert object to string
+         if (typeof body === 'object') {
+            body = JSON.stringify(body);
         }
         console.table(body);
         subscription.handleSubscription(body, function (result) {
