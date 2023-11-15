@@ -7,6 +7,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const port = process.env.PORT || 3001;
 const path = require('path');
+const querystring = require("querystring");
+const {query} = require("express");
 // initialize express
 app.use(express.static('public'));
 // initialize path
@@ -50,14 +52,7 @@ app.get('/hello', function (req, res) {
             body = JSON.parse(body);
         } // else convert object to string
          if (typeof body === 'object') {
-            body = JSON.stringify(body);
-            //convert to URL encoded format
-            body = body.replace(/:/g, '=');
-            body = body.replace(/,/g, '&');
-            body = body.replace(/"/g, '');
-            body = body.replace(/{/g, '');
-            body = body.replace(/}/g, '');
-            body = body.replace(/ /g, '');
+            body = querystring.stringify(body);
 
         }
         console.table(body);
