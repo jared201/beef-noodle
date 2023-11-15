@@ -45,7 +45,7 @@ app.get('/hello', function (req, res) {
         console.log(timestamp);
         console.log(webhookId);
         console.log(crc32);
-        let body = req.query.body;
+        let body = req.body;
         if (typeof body === 'string') {
             body = JSON.parse(body);
         } // else convert object to string
