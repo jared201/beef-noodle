@@ -36,7 +36,7 @@ app.get('/hello', function (req, res) {
         });
     }).post('/paypal-webhook', function (req, res) {
         const subscription = require('./modules/subscription_module');
-        subscription.handleSubscription(req.body, function (result) {
+        subscription.handleSubscription(res, function (result) {
             res.status(200).send('');
         });
     });
