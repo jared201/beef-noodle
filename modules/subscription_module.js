@@ -15,7 +15,7 @@ exports.handleSubscription = function(body, callback) {
     console.log('Verifying with paypal');
     console.log(verify_body);
     let uri = process.env.PAYPAL_WEBSCR || 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr';
-
+    console.log(uri)
     let options = {
         method: 'POST',
         uri: uri,
