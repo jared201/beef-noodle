@@ -14,7 +14,7 @@ app.use(express.static(path.join(__dirname, 'build')));
 // initialize cors
 app.use(cors());
 // initialize body-parser
-//app.use(bodyParser.json());
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // add your endpoints here
 app.get('/hello', function (req, res) {
@@ -51,6 +51,14 @@ app.get('/hello', function (req, res) {
         } // else convert object to string
          if (typeof body === 'object') {
             body = JSON.stringify(body);
+            //convert to URL encoded format
+            body = body.replace(/:/g, '=');
+            body = body.replace(/,/g, '&');
+            body = body.replace(/"/g, '');
+            body = body.replace(/{/g, '');
+            body = body.replace(/}/g, '');
+            body = body.replace(/ /g, '');
+
         }
         console.table(body);
         subscription.handleSubscription(body, function (result) {
